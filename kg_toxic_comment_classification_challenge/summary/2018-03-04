@@ -1,0 +1,256 @@
+===== 2018-03-04 16:30:24
+
+数据预处理:
+
+小写
+去除非a-z和空格的字符
+利用sklearn.features_extraction.text 的 TfidfVectroizer进行embedding
+
+train_size为0.7
+
+randomForest
+
+Processing type : toxic
+On train -> toxic accuracy : 0.984834 recall : 0.857713
+On train -> toxic accuracy : 0.945793 recall : 0.543805
+Processing type : severe_toxic
+On train -> severe_toxic accuracy : 0.996929 recall : 0.725919
+On train -> severe_toxic accuracy : 0.990245 recall : 0.141280
+Processing type : obscene
+On train -> obscene accuracy : 0.993697 recall : 0.895100
+On train -> obscene accuracy : 0.976395 recall : 0.670518
+Processing type : threat
+On train -> threat accuracy : 0.999194 recall : 0.757310
+On train -> threat accuracy : 0.997347 recall : 0.095588
+Processing type : insult
+On train -> insult accuracy : 0.991755 recall : 0.861418
+On train -> insult accuracy : 0.965867 recall : 0.491540
+Processing type : identity_hate
+On train -> identity_hate accuracy : 0.997377 recall : 0.722832
+On train -> identity_hate accuracy : 0.991853 recall : 0.124378
+
+submission_file = submission_20180304162628.csv
+
+===== 2018-03-04 16:30:39
+将train_part,test_part和test中的comment_text全部汇总, 用于训练TfidfVectorizer
+
+Processing type : toxic
+On train_part -> toxic accuracy : 0.969051 recall : 0.687692
+On test_part -> toxic accuracy : 0.864388 recall : 0.049596
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.996204 recall : 0.628366
+On test_part -> severe_toxic accuracy : 0.985357 recall : 0.006237
+Processing type : obscene
+On train_part -> obscene accuracy : 0.981755 recall : 0.666442
+On test_part -> obscene accuracy : 0.924967 recall : 0.031076
+Processing type : threat
+On train_part -> threat accuracy : 0.998827 recall : 0.583871
+On test_part -> threat accuracy : 0.995384 recall : 0.000000
+Processing type : insult
+On train_part -> insult accuracy : 0.982936 recall : 0.663400
+On test_part -> insult accuracy : 0.928351 recall : 0.022401
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.996858 recall : 0.639875
+On test_part -> identity_hate accuracy : 0.986276 recall : 0.002237
+
+召回率更低了...
+
+submission_file = submission_20180304194726.csv
+
+===== 2018-03-04 19:55:45
+用2000个关键字进行匹配
+
+Processing type : toxic
+On train_part -> toxic accuracy : 0.968702 recall : 0.684520
+On test_part -> toxic accuracy : 0.865099 recall : 0.048503
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.996088 recall : 0.614901
+On test_part -> severe_toxic accuracy : 0.985691 recall : 0.004158
+Processing type : obscene
+On train_part -> obscene accuracy : 0.981325 recall : 0.655498
+On test_part -> obscene accuracy : 0.925134 recall : 0.025100
+Processing type : threat
+On train_part -> threat accuracy : 0.999024 recall : 0.658065
+On test_part -> threat accuracy : 0.995300 recall : 0.000000
+Processing type : insult
+On train_part -> insult accuracy : 0.982605 recall : 0.656142
+On test_part -> insult accuracy : 0.929123 recall : 0.020710
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.996786 recall : 0.631524
+On test_part -> identity_hate accuracy : 0.986422 recall : 0.002237
+
+同时查看了正负样本的比例关系:
+Processing type : toxic
+0    144277
+1     15294
+
+Processing type : severe_toxic
+0    157976
+1      1595
+
+Processing type : obscene
+0    151122
+1      8449
+
+Processing type : threat
+0    159093
+1       478
+
+Processing type : insult
+0    151694
+1      7877
+
+Processing type : identity_hate
+0    158166
+1      1405
+
+可以看出 负样本是很少的
+
+所以需要平衡正负样本比例
+
+===== 2018-03-04 20:25:22
+500个词
+Processing type : toxic
+On train_part -> toxic accuracy : 0.969248 recall : 0.692451
+On test_part -> toxic accuracy : 0.864827 recall : 0.049159
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.996374 recall : 0.643627
+On test_part -> severe_toxic accuracy : 0.985190 recall : 0.002079
+Processing type : obscene
+On train_part -> obscene accuracy : 0.982068 recall : 0.672672
+On test_part -> obscene accuracy : 0.923964 recall : 0.026693
+Processing type : threat
+On train_part -> threat accuracy : 0.998881 recall : 0.600000
+On test_part -> threat accuracy : 0.995279 recall : 0.000000
+Processing type : insult
+On train_part -> insult accuracy : 0.982202 recall : 0.650336
+On test_part -> insult accuracy : 0.929103 recall : 0.021978
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.996840 recall : 0.639875
+On test_part -> identity_hate accuracy : 0.986819 recall : 0.002237
+
+submission_file  = submission_20180304202416.csv
+
+===== 2018-03-04 20:40:10
+通过将positive_df进行加倍, 效果比较好
+
+Processing type : toxic
+On train_part -> toxic accuracy : 0.981279 recall : 0.996529
+On test_part -> toxic accuracy : 0.915775 recall : 0.639502
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.988440 recall : 0.982120
+On test_part -> severe_toxic accuracy : 0.984020 recall : 0.361746
+Processing type : obscene
+On train_part -> obscene accuracy : 0.983774 recall : 0.997351
+On test_part -> obscene accuracy : 0.947213 recall : 0.733466
+Processing type : threat
+On train_part -> threat accuracy : 0.987854 recall : 1.000000
+On test_part -> threat accuracy : 0.971633 recall : 0.255952
+Processing type : insult
+On train_part -> insult accuracy : 0.983556 recall : 0.998706
+On test_part -> insult accuracy : 0.936142 recall : 0.633136
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.985943 recall : 0.998418
+On test_part -> identity_hate accuracy : 0.964238 recall : 0.310962
+
+submission_file = submission_20180304211616.csv
+
+==== 2018-03-04 21:37:59
+LogisticsRegression
+Processing type : toxic
+On train_part -> toxic accuracy : 0.868424 recall : 0.840876
+On test_part -> toxic accuracy : 0.886238 recall : 0.800524
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.967959 recall : 0.979566
+On test_part -> severe_toxic accuracy : 0.954316 recall : 0.858628
+Processing type : obscene
+On train_part -> obscene accuracy : 0.921016 recall : 0.891618
+On test_part -> obscene accuracy : 0.944393 recall : 0.853785
+Processing type : threat
+On train_part -> threat accuracy : 0.971206 recall : 0.973451
+On test_part -> threat accuracy : 0.968437 recall : 0.738095
+Processing type : insult
+On train_part -> insult accuracy : 0.901886 recall : 0.883023
+On test_part -> insult accuracy : 0.915984 recall : 0.828402
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.955395 recall : 0.971519
+On test_part -> identity_hate accuracy : 0.936644 recall : 0.771812
+
+submission_file = submission_20180304214136.csv
+
+===== 2018-03-04 21:53:11
+换回1000个词
+
+
+Processing type : toxic
+On train_part -> toxic accuracy : 0.861884 recall : 0.828126
+On test_part -> toxic accuracy : 0.886029 recall : 0.815102 auc : 0.854368
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.966578 recall : 0.977778
+On test_part -> severe_toxic accuracy : 0.952645 recall : 0.868085 auc : 0.910784
+Processing type : obscene
+On train_part -> obscene accuracy : 0.916922 recall : 0.884840
+On test_part -> obscene accuracy : 0.942973 recall : 0.858609 auc : 0.903244
+Processing type : threat
+On train_part -> threat accuracy : 0.972919 recall : 0.981538
+On test_part -> threat accuracy : 0.962525 recall : 0.771242 auc : 0.867190
+Processing type : insult
+On train_part -> insult accuracy : 0.896300 recall : 0.870534
+On test_part -> insult accuracy : 0.916360 recall : 0.833674 auc : 0.877244
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.950842 recall : 0.968127
+On test_part -> identity_hate accuracy : 0.927118 recall : 0.790524 auc : 0.859398
+
+提升有,但是并不大
+
+submission_file = submission_20180304221119.csv
+
+===== 2018-03-04 22:31:12
+
+SGDClassifier
+
+Processing type : toxic
+On train_part -> toxic accuracy : 0.859400 recall : 0.815876
+On test_part -> toxic accuracy : 0.893654 recall : 0.793504 auc : 0.848965
+Processing type : severe_toxic
+On train_part -> severe_toxic accuracy : 0.952389 recall : 0.948517
+On test_part -> severe_toxic accuracy : 0.954232 recall : 0.904232 auc : 0.929469
+Processing type : obscene
+On train_part -> obscene accuracy : 0.908326 recall : 0.842660
+On test_part -> obscene accuracy : 0.966536 recall : 0.828794 auc : 0.901572
+Processing type : threat
+On train_part -> threat accuracy : 0.966050 recall : 0.972810
+On test_part -> threat accuracy : 0.959371 recall : 0.761905 auc : 0.860942
+Processing type : insult
+On train_part -> insult accuracy : 0.893146 recall : 0.852733
+On test_part -> insult accuracy : 0.928246 recall : 0.831646 auc : 0.882462
+Processing type : identity_hate
+On train_part -> identity_hate accuracy : 0.931453 recall : 0.934760
+On test_part -> identity_hate accuracy : 0.926053 recall : 0.820755 auc : 0.873874
+
+submission_file = submission_20180304223034.csv
+
+
+
+===== 总结
+
+正负样本比例很重要
+
+LRClassifier 效果比RF,SGDClassifier要好
+
+单词数量可以提升,但效果不是很明显.
+
+===== 后续
+
+单词现在全是小写, 可以考虑将单复数去重一下, 看看效果比对?
+
+停用词已经去了, 但是是否可以再添加更多的停用词?
+
+n-gram和词袋怎么应用在这里?
+
+词性? (感觉作用并不大, 因为表示感情的词语可以是动词, 名词, 形容词, 副词等, 无法根据词性去除特定的某种词)
+
+考虑更多classifer模型? 加入神经网络?
+
+
+
